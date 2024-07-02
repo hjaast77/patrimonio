@@ -11,7 +11,7 @@ El edificio tiene 3 pisos, 9 departamentos (sectores) a los que les pertenecen d
 
 Por el momento solo se implementa la solucion con los bienes descriptosd en (1)
 
-Por el momento solo tengo metodos GET y PUT
+Metodos utilizados GET y PUT
 
 DB
 
@@ -58,10 +58,19 @@ Aca se muestran todas las oficinas (abiertas y cerradas)
 Cosas a implementar
 Que la lista de cards este ordenada por abierta/cerrada (un order by en la consulta creo que bastaría)
 Que se pueda filtrar por piso como en la seccion asignar
-Podriamos hacer uso de los metodos CREATE para crear una oficina y DELETE solo para borrar oficinas.
+Podriamos hacer uso de los metodos POST para crear una oficina y DELETE solo para borrar oficinas.
 El crtiterio de borrar oficinas sería que como la lista de ubicaciones ya vino creada, muchas de ellas son ubicacioens que no nos interesaria porque no tienen bienes (ej un baño)
 Sol oen estos casos hariamos uso de el metodo DELETE
+Si borramos oficina hay que validar que no tenga bienes asignados previamente
 
 // BIENES
 
 Aca aun no pense
+
+// AREAS
+
+Se debe poder editar areas. Solo cambio de nombre (GET / PUT)
+Opcional Crear Areas (POST)
+
+//
+
