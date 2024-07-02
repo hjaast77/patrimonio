@@ -9,7 +9,7 @@ const {
   eliminarBien,
 } = require("../controllers/bienesController");
 
-router.get("/:id", bienesPorOficina);
+router.get("/bienesOf/:id", bienesPorOficina);
 router.get("/nombre/:cod", obtenerBien);
 router.get("/nom", obtenerBien2);
 router.put("/agregar", agregarBien);

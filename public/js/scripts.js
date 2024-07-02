@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //Busco en la tabla bienes todos los que oficinas_id = idOficinaSeleccionada y creo las cards
   async function mostrarBienesOficina(idOficinaSeleccionada) {
     try {
-      const response = await fetch(`/bienes/${idOficinaSeleccionada}`);
+      const response = await fetch(`/bienes/bienesOf/${idOficinaSeleccionada}`);
       const data = await response.json();
       bienesAsignadosContainer.innerHTML = "";
       data.forEach((bien) => {
@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //busca en la DB el cod_MINCYT y muestra la descripción
   async function mostrarDescripcionBien(cod) {
     try {
-      const response = await fetch(`/bienes/nombre/${cod}`);
+      const response = await fetch(`/bienes/nom/?cod=${cod}`);
       const data = await response.json();
       nombreBienContainer.textContent = data.descripcion;
     } catch (error) {
