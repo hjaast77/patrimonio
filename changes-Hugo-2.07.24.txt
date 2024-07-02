@@ -1,0 +1,24 @@
+Modificaciones en bienesController.js, BienesRouter.js, scripts.js y tabla bienes
+Verificar en tabla bienes si el registro con id = 2 y id = 3 no estan repetidos (mismo numero cod_MINCYT)
+bienesController.js
+Se modifica para hacer uso del trigger update (function eliminarBien)
+Se modifica bienesController.js Function agregarBien. Si el bien ya esta asignado a otra oficina se muestra en pantalla en caso de querer reasignarlo
+BienesRouter.js
+Se elimina la ruta "/:id" ya que provocaba conflictos con otras rutas. Se adecua el fetch en scripts.js acorde a la nueva ruta
+se modifica /nom para aceptar query string.  Se adecua el fetch en scripts.js acorde a la nueva ruta
+scripts.js
+se modifica funcion mostrarDescripcionBien() para hacer fetch a la ruta fetch(`/bienes/nom/?cod=${cod}`);
+AGREGAR COLUMNA UPDATED_DATE a la base de datos
+ALTER TABLE `bienes` ADD COLUMN `updated_date2` DATE
+//TRIGGER PARA ESTABLECER FECHA A LAS ASIGNACIONES
+DROP TRIGGER IF EXISTS update_bienes_date;
+DELIMITER //
+CREATE TRIGGER update_bienes_date"
+BEFORE UPDATE ON `bienes`
+FOR EACH ROW
+BEGIN
+  IF NEW.oficinas_id IS NOT NULL AND OLD.oficinas_id IS NULL THEN
+    SET NEW.updated_date = CURDATE();
+  END IF;
+END//
+DELIMITER;
