@@ -240,7 +240,8 @@ document.addEventListener("DOMContentLoaded", function () {
       bienesAsignadosContainer.innerHTML = "";
       data.forEach((bien) => {
         const div = document.createElement("div");
-        div.className = "bien-card";
+        console.log(bien.cuentas_idcuentas);
+        bien.cuentas_idcuentas ? div.className = "bien-card": div.className = "bien-card revisar" ;
         div.innerHTML = `<p><strong>Código:</strong> ${bien.cod_MINCYT}</p>
                          <p><strong>Descripción:</strong> ${bien.descripcion}</p>`;
         const eliminarButton = document.createElement("button");

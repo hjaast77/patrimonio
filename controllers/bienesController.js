@@ -1,5 +1,6 @@
 const db = require("../models/db");
 
+//Lista los bienes de una oficina
 const bienesPorOficina = async (req, res) => {
   const oficina_id = req.params.id;
   console.log(oficina_id);
@@ -9,7 +10,7 @@ const bienesPorOficina = async (req, res) => {
   }
   try {
     const [rows] = await db.pool.execute(
-      "SELECT b.id, b.descripcion, b.cod_MINCYT from bienes b INNER JOIN oficinas o on b.oficinas_id = o.id WHERE o.id = ?",
+      "SELECT b.id, b.descripcion, b.cod_MINCYT, b.cuentas_idcuentas from bienes b INNER JOIN oficinas o on b.oficinas_id = o.id WHERE o.id = ?",
       [oficina_id]
     );
     res.json(rows);
@@ -18,6 +19,7 @@ const bienesPorOficina = async (req, res) => {
   }
 };
 
+//Busca cod_MINCYT y Devuelve la descripcion. 
 const obtenerBien = async (req, res) => {
   const codigoBien = req.params.cod;
   console.log("Código de bien:", codigoBien);

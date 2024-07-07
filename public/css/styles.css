@@ -184,6 +184,10 @@ h1 {
   box-sizing: border-box;
 }
 
+.bien-card.revisar  {
+  background-color: #ff3636;
+}
+
 .bien-card p {
   margin: 5px 0;
 }
@@ -279,6 +283,9 @@ h2 {
     box-sizing: border-box;
   }
 
+  .bien-card.revisar  {
+    background-color: #ff3636;
+  }
   .bien-card p {
     margin: 5px 0;
   }
@@ -475,6 +482,10 @@ h2 {
     box-sizing: border-box;
   }
 
+  .bien-card.revisar  {
+    background-color: #ff3636;
+  }
+
   .bien-card p {
     margin: 5px 0;
   }
@@ -589,8 +600,13 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: calc(100% - 10px);
     box-sizing: border-box;
+    
   }
 
+  
+  .bien-card.revisar  {
+    background-color: #ff3636;
+  }
   .bien-card p {
     margin: 5px 0;
   }
