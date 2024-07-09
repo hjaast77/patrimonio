@@ -40,23 +40,38 @@
                     <label for="pa">PA (Planta Alta)</label></span>
             </div>
             <div class="buscador__todos">
-                <label class="formLabel" for="oficinaSelect">Selecciona una Oficina:</label>
-                <select id="oficinaSelect" class="form-control">
-                    <option value="" disabled selected>Seleccione oficina</option>
-                    <!-- Options will be added dynamically using JavaScript -->
-                </select>
+                <div class="buscador">
+                    <label class="formLabel" for="oficinaSelect">Selecciona una Oficina:</label>
+                    <select id="oficinaSelect" class="form-control">
+                        <option value="" disabled selected>Seleccione oficina</option>
+
+                    </select>
+                </div>
             </div>
             <div class="buscador__bien">
-                <label class="formLabel" for="bienInput">Código MinCyT:</label>
-                <input type="number" id="bienInput" class="form-control">
+                <div>
+                    <label class="formLabel" for="bienInput">Código MinCyT:</label>
+                    <input type="number" id="bienInput" class="form-control" placeholder="Código etiqueta">
+                </div>
+                <div>
+                    <label class="formLabel" for="bienInputManual">Manual: Sin codigo
+                        MINCYT</label>
+                    <input type="number" id="bienInputManual" class="form-control"
+                        placeholder="Ingresar código de un bien similar">
+                </div>
+                <div>
+                    <label class="formLabel" for="bienInputManualSpafe">Manual: Codigos SPAFE</label>
+                    <input type="text" id="bienInputManualSpafe" class="form-control"
+                        placeholder="Ingresar código SPAFE">
+                </div>
             </div>
             <div class="botones">
                 <button id="asignarBtn" class="btn btn-primary">Asignar Bien</button>
                 <button id="cerrarUbicacion" class="btn btn-danger">Cerrar Ubicación</button>
             </div>
 
-
         </div>
+        <hr>
 
         <div id="nombreBienContainer"></div>
         <!-- Container para mostrar el nombre del bie ncuando se busca el cod_MINCYT -->
@@ -83,6 +98,18 @@
 
 
     </section>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Elemento</h2>
+            <label for="bienInputEdit">Ingrese el código de un bien similar:</label>
+            <input type="number" id="bienInputEdit" placeholder="Ingresar código de bien similar">
+
+            <div id="descripcionBienContainer"></div>
+            <button id="submitEdit">Guardar Cambios</button>
+        </div>
+    </div>
 
 
 

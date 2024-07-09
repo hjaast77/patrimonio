@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const oficinaSelect = document.getElementById("oficinaSelect");
   const bienInput = document.getElementById("bienInput");
+  const bienInputManual = document.getElementById("bienInputManual");
+  const bienInputEdit = document.getElementById("bienInputEdit");
   const nombreBienContainer = document.getElementById("nombreBienContainer");
   const asignarBienButton = document.getElementById("asignarBtn");
   const cerrarUbicBtn = document.querySelector("#cerrarUbicacion");
@@ -8,7 +10,34 @@ document.addEventListener("DOMContentLoaded", function () {
   const nav__btns = document.querySelectorAll(".nav__link");
   const radios = document.getElementsByName("nivel");
   const ubicacionesContainer = document.getElementById("ubicacionesContainer");
+  const descripcionBienContainer = document.getElementById(
+    "descripcionBienContainer"
+  );
+  const modal = document.getElementById("editModal");
+  const span = document.getElementsByClassName("close")[0];
+  const submitEdit = document.getElementById("submitEdit");
+  let currentCod = "";
 
+  //#################################################################################
+  //MODAL;
+  //#################################################################################
+  function openModal(cod) {
+    bienInputEdit.value = "";
+    currentCod = cod;
+    modal.style.display = "block";
+    bienInputEdit.focus();
+    console.log(`codigo que llega al modal ${cod}`);
+  }
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
   //#################################################################################
   //LISTENERS;
   //#################################################################################
@@ -26,25 +55,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Valido que el bien tenga 5 digitos (Cod_MINCYT es un numero que va desde 28011 hasta 36032 y muestro la descripcion del bien )
   bienInput.addEventListener("input", function () {
+    bienInputManual.value = "";
     const codigoBien = bienInput.value;
 
     if (codigoBien.length !== 5) {
       nombreBienContainer.textContent = "";
       return;
     }
-    mostrarDescripcionBien(codigoBien);
+    mostrarDescripcionBien(codigoBien, nombreBienContainer);
+  });
+  bienInputManual.addEventListener("input", function () {
+    bienInput.value = "";
+    const codigoBien = bienInputManual.value;
+
+    if (codigoBien.length !== 5) {
+      nombreBienContainer.textContent = "";
+      return;
+    }
+    mostrarDescripcionBien(codigoBien, nombreBienContainer);
+  });
+
+  bienInputEdit.addEventListener("input", function () {
+    const codigoBien = bienInputEdit.value;
+
+    if (codigoBien.length !== 5) {
+      descripcionBienContainer.textContent = "";
+      return;
+    }
+    mostrarDescripcionBien(codigoBien, descripcionBienContainer);
   });
 
   asignarBienButton.addEventListener("click", function () {
     const idOficina = oficinaSelect.value;
 
-    const codigoBien = bienInput.value;
+    const codigoBien = bienInput.value || bienInputManual.value;
+    //TODO Hay que hacer que el input en el que pongo el codigo borre el contenido del otro input
 
     if (codigoBien.length !== 5) {
       mostrarMensaje("Por favor ingrese el código completo del bien.", "error");
       return;
     }
-    agregarBien(idOficina, codigoBien);
+    bienInput.value
+      ? agregarBien(idOficina, codigoBien)
+      : agregarBienManual(idOficina, codigoBien);
   });
 
   //Abrir/Cerrar oficinas
@@ -55,6 +108,25 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     cerrarOficina(idOficinaSeleccionada);
+  });
+
+  submitEdit.addEventListener("click", async () => {
+    const newCode = bienInputEdit.value;
+    console.log(currentCod);
+    console.log(newCode);
+    if (!newCode) {
+      alert("Debe seleccionar el código de un bien similar");
+      return;
+    }
+
+    try {
+      await editarBien(currentCod, newCode);
+      modal.style.display = "none";
+      await mostrarDescripcionBien(currentCod, nombreBienContainer);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al editar el bien.");
+    }
   });
 
   //#################################################################################
@@ -103,7 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //Borra contenid ode Select principal
   function clearSelect() {
-    oficinaSelect.innerHTML = "";
+    oficinaSelect.innerHTML =
+      '<option value="" disabled selected>Seleccione oficina</option>';
   }
   //borra el input de busqueda MINCYT y la desripcion
   function limpiarCodigo() {
@@ -241,7 +314,9 @@ document.addEventListener("DOMContentLoaded", function () {
       data.forEach((bien) => {
         const div = document.createElement("div");
         console.log(bien.cuentas_idcuentas);
-        bien.cuentas_idcuentas ? div.className = "bien-card": div.className = "bien-card revisar" ;
+        bien.cuentas_idcuentas
+          ? (div.className = "bien-card")
+          : (div.className = "bien-card revisar");
         div.innerHTML = `<p><strong>Código:</strong> ${bien.cod_MINCYT}</p>
                          <p><strong>Descripción:</strong> ${bien.descripcion}</p>`;
         const eliminarButton = document.createElement("button");
@@ -259,19 +334,108 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   //busca en la DB el cod_MINCYT y muestra la descripción
-  async function mostrarDescripcionBien(cod) {
+  async function mostrarDescripcionBien(cod, container) {
     try {
       const response = await fetch(`/bienes/nom/?cod=${cod}`);
       const data = await response.json();
-      nombreBienContainer.textContent = data.descripcion;
+      container.textContent = "";
+      const descripcionElemento = document.createElement("span");
+      descripcionElemento.textContent = data.descripcion;
+
+      const editIcon = document.createElement("i");
+      editIcon.classList.add("fa-regular", "fa-pen-to-square");
+      editIcon.style.cursor = "pointer";
+      editIcon.style.marginLeft = "10px";
+
+      editIcon.addEventListener("click", () => {
+        openModal(cod);
+      });
+
+      container.appendChild(descripcionElemento);
+      container.appendChild(editIcon);
+
+      // nombreBienContainer.textContent = data.descripcion;
     } catch (error) {
       console.error("Error:", error);
       mostrarMensaje("Error al obtener el nombre del bien.", "error");
     }
   }
 
+  async function editarBien(codigoBienViejo, codigoBienNuevo) {
+    try {
+      const response = await fetch("/bienes/editar", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          codigoBienViejo,
+          codigoBienNuevo,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Error al editar el bien");
+      }
+
+      const data = await response.json();
+      return data;
+      // mostrarMensaje("Asignación eliminada correctamente.", "ok");
+      // mostrarBienesOficina(idOficinaSeleccionada); // hago un reload de los bienes que estan asignados
+    } catch (error) {
+      console.error("Error al eliminar la asignación del bien:", error);
+      // mostrarMensaje("Error al eliminar la asignación del bien.", "error");
+    }
+  }
+
+  async function agregarBienManual(idOficina, codigoBien) {
+    if (!idOficina) {
+      mostrarMensaje("Debe seleccionar una oficina primero", "error");
+      return;
+    }
+    try {
+      const response = await fetch(`/bienes/nombre/${codigoBien}`);
+      const data = await response.json();
+
+      if (!data || !data.descripcion || !data.precio) {
+        throw new Error("Datos del bien incompletos");
+      }
+
+      const nuevoBien = {
+        descripcion: data.descripcion,
+        precio: data.precio,
+        cuenta: data.cuentas_idcuentas || null,
+        oficina: idOficina,
+      };
+
+      console.log(nuevoBien);
+
+      const insertResponse = await fetch("/bienes/cargaManual", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevoBien),
+      });
+
+      if (!insertResponse.ok) {
+        throw new Error("Error al insertar el nuevo bien en la base de datos");
+      }
+
+      mostrarMensaje("Bien agregado correctamente.", "success");
+      limpiarCodigo(); //limpiamos input y descripcion
+      mostrarBienesOficina(idOficina); //Relaod de los bienes de la oficina
+    } catch (error) {
+      console.error("Error:", error);
+      mostrarMensaje("Error al agregar el bien.", "error");
+    }
+  }
+
   //actualizamos el campo oficinas_id de la tabla bienes con idOficina para el registro cuyo cod_MINCYT = codigoBien
   async function agregarBien(idOficina, codigoBien) {
+    if (!idOficina) {
+      mostrarMensaje("Debe seleccionar una oficina primero", "error");
+      return;
+    }
     try {
       const response = await fetch("/bienes/agregar", {
         method: "PUT",

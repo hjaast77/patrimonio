@@ -19,7 +19,7 @@ const bienesPorOficina = async (req, res) => {
   }
 };
 
-//Busca cod_MINCYT y Devuelve la descripcion. 
+//Busca cod_MINCYT y Devuelve la descripcion.
 const obtenerBien = async (req, res) => {
   const codigoBien = req.params.cod;
   console.log("Código de bien:", codigoBien);
@@ -29,7 +29,7 @@ const obtenerBien = async (req, res) => {
 
   try {
     const [rows] = await db.pool.execute(
-      "SELECT descripcion FROM bienes WHERE cod_MINCYT = ?",
+      "SELECT descripcion, precio, cuentas_idcuentas FROM bienes WHERE cod_MINCYT = ?",
       [codigoBien]
     );
     res.json(rows[0]);
@@ -101,10 +101,52 @@ const eliminarBien = async (req, res) => {
   }
 };
 
+const agregarManual = async (req, res) => {
+  const { descripcion, precio, cuenta, oficina } = req.body;
+
+  if (!descripcion || !precio || !oficina) {
+    return res
+      .status(400)
+      .json({ error: "Datos incompletos para agregar el bien" });
+  }
+
+  try {
+    const [rows] = await db.pool.execute(
+      "SELECT MAX(cod_MINCYT) as maxCod FROM bienes"
+    );
+    const maxCod = rows[0].maxCod || 0;
+    const nuevoCodigo = maxCod + 1;
+    console.log(nuevoCodigo);
+    await db.pool.execute(
+      "INSERT INTO bienes (descripcion, precio, cuentas_idcuentas, oficinas_id, cod_MINCYT) VALUES (?, ?, ?, ?, ?)",
+      [descripcion, precio, cuenta, oficina, nuevoCodigo]
+    );
+
+    res.status(201).json({ message: "Bien agregado correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const editarBien = async (req, res) => {
+  const { codigoBienViejo, codigoBienNuevo } = req.body;
+  try {
+    await db.pool.execute(
+      `UPDATE bienes AS b1 JOIN (SELECT descripcion, precio, cuentas_idcuentas FROM bienes WHERE cod_MINCYT = ?) AS b2 SET b1.descripcion = b2.descripcion, b1.precio = b2.precio, b1.cuentas_idcuentas = b2.cuentas_idcuentas WHERE b1.cod_MINCYT = ?;`,
+      [codigoBienNuevo, codigoBienViejo]
+    );
+    res.status(200).json({ message: "Bien editado correctamente." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   bienesPorOficina,
   obtenerBien,
   obtenerBien2,
   agregarBien,
   eliminarBien,
+  agregarManual,
+  editarBien,
 };
