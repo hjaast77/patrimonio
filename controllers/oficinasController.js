@@ -2,7 +2,9 @@ const db = require("../models/db");
 
 const listarOficinas = async (req, res) => {
   try {
-    const [rows] = await db.pool.execute("SELECT * FROM oficinas");
+    const [rows] = await db.pool.execute(
+      "SELECT * FROM oficinas ORDER BY cerrada DESC;"
+    );
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -12,7 +14,7 @@ const listarOficinas = async (req, res) => {
 const listarOficinasAbiertas = async (req, res) => {
   try {
     const [rows] = await db.pool.execute(
-      "SELECT * FROM oficinas WHERE cerrada <> 1"
+      "SELECT * FROM oficinas WHERE cerrada <> 1 order by nombre"
     );
     res.json(rows);
   } catch (error) {
@@ -36,7 +38,7 @@ const listarOficinasPorPiso = async (req, res) => {
 
   try {
     const [rows] = await db.pool.execute(
-      "SELECT * FROM oficinas WHERE cerrada <> 1 and pisos_id = ?",
+      "SELECT * FROM oficinas WHERE cerrada <> 1 and pisos_id = ? order by nombre",
       [piso_id]
     );
     res.json(rows);
