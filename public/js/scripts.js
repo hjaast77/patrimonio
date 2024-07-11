@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     cerrarOficina(idOficinaSeleccionada);
+    bienesAsignadosContainer.innerHTML = "";
   });
 
   submitEdit.addEventListener("click", async () => {
@@ -424,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function () {
       mostrarMensaje("Bien agregado correctamente.", "success");
       limpiarCodigo(); //limpiamos input y descripcion
       mostrarBienesOficina(idOficina); //Relaod de los bienes de la oficina
+      bienInput.focus();
     } catch (error) {
       console.error("Error:", error);
       mostrarMensaje("Error al agregar el bien.", "error");
@@ -462,6 +464,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       limpiarCodigo(); //limpiamos input y descripcion
       mostrarBienesOficina(idOficina); //Relaod de los bienes de la oficina
+      bienInput.focus();
     } catch (error) {
       console.error("Error:", error);
       mostrarMensaje(error.message, "error");
