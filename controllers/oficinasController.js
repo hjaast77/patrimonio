@@ -85,9 +85,9 @@ const crearOficina = async (req, res) => {
   console.log(`Intentando crear oficina`);
   try {
     await db.pool.execute("INSERT INTO oficinas (nombre,descripcion,area_id, pisos_id) VALUES (?,?,?,?)", [numOfi, descOfi, areaOfi, pisoOfi]);
-    res.status(201).json({ message: "Oficina agregada correctamente" });
+    res.status(200).json({ message: "Oficina creada correctamente." });
   } catch (error) {
-    res.status(500).json({ error: "No anda"+ error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

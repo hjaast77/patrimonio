@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const asignarBienButton = document.getElementById("asignarBtn");
   const cerrarUbicBtn = document.querySelector("#cerrarUbicacion");
   const mensajeEstado = document.getElementById("mensajeEstado");
+  const mensajeEstadoS4 = document.getElementById("mensajeEstadoS4");
   const nav__btns = document.querySelectorAll(".nav__link");
   const radios = document.getElementsByName("nivel");
   const ubicacionesContainer = document.getElementById("ubicacionesContainer");
@@ -129,6 +130,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       await crearOficina(descOfi,numOfi,areaOfi,pisoOfi);
+        inputDescOfi.value=null;
+        inputNumOfi.value=null;
+        inputAreaOfi.value=null;
+        inputPisoOfi.value=null;
     } catch (error) {
       console.error("Error:", error);
       alert("Hubo un error al Crear la Oficina.");
@@ -217,6 +222,15 @@ document.addEventListener("DOMContentLoaded", function () {
       mensajeEstado.style.display = "none";
     }, 3000);
   }
+
+  function mostrarMensajeS4(mensaje, tipo) {
+    mensajeEstadoS4.textContent = mensaje;
+    mensajeEstadoS4.style.display = "block";
+    mensajeEstadoS4.style.color = tipo === "error" ? "red" : "green";
+    setTimeout(() => {
+      mensajeEstadoS4.style.display = "none";
+    }, 3000);
+  }
   //##################################################################################
 
   //Cargar la lista de oficinas en el select
@@ -277,11 +291,16 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         body: JSON.stringify(nuevaOfi),
       });
-      const data = await response.json();
-      alert("Oficina cerrada correctamente.", "ok");
+      
+      if (!response.ok) {
+        throw new Error("Error al crear la oficina");
+      }
+
+      mostrarMensajeS4("Oficina creada correctamente", "success");
+      
     } catch (error) {
       console.error("Error al crear la oficina:", error);
-      mostrarMensaje("Error al crear la oficina.", "error");
+      mostrarMensajeS4("Error al crear la oficina.", "error");
     }
   }
 
