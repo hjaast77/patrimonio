@@ -22,6 +22,9 @@
             <li class="nav__item">
                 <a class="nav__link" href="#section--3">Bienes</a>
             </li>
+            <li class="nav__item">
+                <a class="nav__link" href="#section--4">Oficinas</a>
+            </li>
         </ul>
     </nav>
     <h1>Asignar Bienes a Oficina</h1>
@@ -95,6 +98,55 @@
 
     <section class="section" id="section--3" style="display: none;">
         <p>Listado de Bienes</p>
+
+
+    </section>
+    <section class="section" id="section--4" style="display: none;" >
+
+        <div class="form__group">
+            <div class="pisos"><span>
+                <input type="radio" id="crearOfi" name="nivel" value="SS" class="pisos">
+                <label for="ss">Crear</label></span>
+            <span>
+                <input type="radio" id="borrarOfi" name="nivel" value="PB" class="pisos">
+                <label for="pb">Borrar</label></span>
+        </div>
+            
+                <div class="">
+                    <div>
+                        <label class="formLabel" for="descOfi">Descripcion</label>
+                        <input type="text" id="descOfi" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="formLabel" for="numOfi">Numero Oficina</label>
+                        <input type="number" min="1"  id="numOfi" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="formLabel" for="areaOfi">Area</label>
+                        <input type="number" min="1" max="9"  id="areaOfi" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="formLabel" for="pisoOfi">Piso</label>
+                        <input type="number" min="1" max="3" id="pisoOfi" class="form-control" required>
+                    </div>
+                </div>
+                <div class="botones">
+                    <button id="btnCrearOfi" class="btn btn-primary">Crear Oficina</button>
+                </div>
+       
+
+
+        </div>
+        <hr>
+
+        <div id="nombreBienContainer"></div>
+        <!-- Container para mostrar el nombre del bie ncuando se busca el cod_MINCYT -->
+
+        <div id="mensajeEstado" style="display: none;"></div>
+
+        <div id="bienesAsignadosContainer">
+            <!-- Se muestran los bienes asignados a una oficina en formato card -->
+        </div>
 
 
     </section>

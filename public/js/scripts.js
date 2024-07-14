@@ -18,6 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const submitEdit = document.getElementById("submitEdit");
   let currentCod = "";
 
+  // Elementos de pestaña Oficinas
+  const selectCrearOfi = document.getElementById("crearOfi");
+  const selectBorrarOfi = document.getElementById("borrarOfi");
+  const inputDescOfi = document.getElementById("descOfi");
+  const inputNumOfi = document.getElementById("numOfi");
+  const inputAreaOfi = document.getElementById("areaOfi");
+  const inputPisoOfi = document.getElementById("pisoOfi");
+  const btnCrearOfi = document.getElementById("btnCrearOfi");
+
   //#################################################################################
   //MODAL;
   //#################################################################################
@@ -109,6 +118,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     cerrarOficina(idOficinaSeleccionada);
   });
+
+  //Crear Oficina
+  btnCrearOfi.addEventListener("click", async ()=>{
+    
+    descOfi = inputDescOfi.value;
+    numOfi = inputNumOfi.value;
+    areaOfi = inputAreaOfi.value;
+    pisoOfi = inputPisoOfi.value;
+
+    try {
+      await crearOficina(descOfi,numOfi,areaOfi,pisoOfi);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al Crear la Oficina.");
+    }
+  })
 
   submitEdit.addEventListener("click", async () => {
     const newCode = bienInputEdit.value;
@@ -228,6 +253,35 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       console.error("Error al obtener las oficinas:", error);
       mostrarMensaje("Error al obtener las oficinas.", "error");
+    }
+  }
+
+  // Funcion Crear Oficina
+  async function crearOficina(descOfi, numOfi, areaOfi, pisoOfi){
+    
+    const areaOfiI = parseInt(areaOfi)
+    const pisoOfiI = parseInt(pisoOfi)
+    
+    const nuevaOfi={
+      descOfi:descOfi,
+      numOfi:numOfi,
+      areaOfi:areaOfiI,
+      pisoOfi:pisoOfiI
+    }
+  
+    try {
+      const response = await fetch("/ubicaciones/crear", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevaOfi),
+      });
+      const data = await response.json();
+      alert("Oficina cerrada correctamente.", "ok");
+    } catch (error) {
+      console.error("Error al crear la oficina:", error);
+      mostrarMensaje("Error al crear la oficina.", "error");
     }
   }
 

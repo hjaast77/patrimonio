@@ -78,10 +78,24 @@ const cerrarOficina = async (req, res) => {
   }
 };
 
+const crearOficina = async (req, res) => {
+  
+  const { descOfi, numOfi, areaOfi, pisoOfi } = req.body; 
+  
+  console.log(`Intentando crear oficina`);
+  try {
+    await db.pool.execute("INSERT INTO oficinas (nombre,descripcion,area_id, pisos_id) VALUES (?,?,?,?)", [numOfi, descOfi, areaOfi, pisoOfi]);
+    res.status(201).json({ message: "Oficina agregada correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: "No anda"+ error.message });
+  }
+};
+
 module.exports = {
   listarOficinas,
   listarOficinasAbiertas,
   listarOficinasPorPiso,
   cambiarEstadoOficina,
   cerrarOficina,
+  crearOficina
 };
