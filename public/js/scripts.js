@@ -20,14 +20,16 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentCod = "";
 
   // Elementos de pestaña Oficinas
-  const selectCrearOfi = document.getElementById("crearOfi");
-  const selectBorrarOfi = document.getElementById("borrarOfi");
+  const selectCrearOfi = document.getElementById("radioCrearOfi");
+  const selectBorrarOfi = document.getElementById("radioBorrarOfi");
+  const seccionCrear = document.getElementById("sectionCrear");
+  const seccionBorrar = document.getElementById("sectionBorrar");
   const inputDescOfi = document.getElementById("descOfi");
   const inputNumOfi = document.getElementById("numOfi");
   const inputAreaOfi = document.getElementById("areaOfi");
   const inputPisoOfi = document.getElementById("pisoOfi");
   const btnCrearOfi = document.getElementById("btnCrearOfi");
-
+  const btnBorrarOfi = document.getElementById("btnBorrarOfi");
   //#################################################################################
   //MODAL;
   //#################################################################################
@@ -120,7 +122,15 @@ document.addEventListener("DOMContentLoaded", function () {
     cerrarOficina(idOficinaSeleccionada);
   });
 
+  
+
   //Crear Oficina
+  selectCrearOfi.addEventListener("click", () => {
+    seccionBorrar.style.display= "none"
+    seccionCrear.style.display= "block"
+    btnCrearOfi.style.display= "block"
+    btnBorrarOfi.style.display= "none"
+  })
   btnCrearOfi.addEventListener("click", async ()=>{
     
     descOfi = inputDescOfi.value;
@@ -139,6 +149,15 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Hubo un error al Crear la Oficina.");
     }
   })
+
+  // Borrar Oficina
+  selectBorrarOfi.addEventListener("click", () => {
+    seccionBorrar.style.display= "block"
+    seccionCrear.style.display= "none"
+    btnCrearOfi.style.display= "none"
+    btnBorrarOfi.style.display= "block"
+  })
+
 
   submitEdit.addEventListener("click", async () => {
     const newCode = bienInputEdit.value;
@@ -303,6 +322,9 @@ document.addEventListener("DOMContentLoaded", function () {
       mostrarMensajeS4("Error al crear la oficina.", "error");
     }
   }
+
+  // Funcion Borrar Oficina
+
 
   //Listamos las ubicaciones en formato card
   async function mostrarUbicaciones() {

@@ -27,10 +27,10 @@
             </li>
         </ul>
     </nav>
-    <h1>Asignar Bienes a Oficina</h1>
+    
 
     <section class="section" id="section--1">
-
+        <h1>Asignar Bienes a Oficina</h1>
         <div class="form__group">
             <div class="pisos"><span>
                     <input type="radio" id="ss" name="nivel" value="SS" class="pisos">
@@ -101,41 +101,51 @@
 
 
     </section>
-    <section class="section" id="section--4" style="display: none;" >
+    <section class="section" id="section--4" style="display: none;">
+        <h1>Crear / Eliminar Oficinas</h1>
 
         <div class="form__group">
             <div class="pisos"><span>
-                <input type="radio" id="crearOfi" name="nivel" value="SS" class="pisos">
-                <label for="ss">Crear</label></span>
-            <span>
-                <input type="radio" id="borrarOfi" name="nivel" value="PB" class="pisos">
-                <label for="pb">Borrar</label></span>
-        </div>
-            
-                <div class="">
-                    <div>
-                        <label class="formLabel" for="descOfi">Descripcion</label>
-                        <input type="text" id="descOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="numOfi">Numero Oficina</label>
-                        <input type="number" min="1"  id="numOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="areaOfi">Area</label>
-                        <input type="number" min="1" max="9"  id="areaOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="pisoOfi">Piso</label>
-                        <input type="number" min="1" max="3" id="pisoOfi" class="form-control" required>
-                    </div>
+                    <input type="radio" id="radioCrearOfi" name="nivel" value="SS" class="pisos">
+                    <label for="ss">Crear</label></span>
+                <span>
+                    <input type="radio" id="radioBorrarOfi" name="nivel" value="PB" class="pisos">
+                    <label for="pb">Borrar</label></span>
+            </div>
+
+            <div id="sectionCrear">
+                <div>
+                    <label class="formLabel" for="descOfi">Descripcion</label>
+                    <input type="text" id="descOfi" class="form-control" required>
+                </div>
+                <div>
+                    <label class="formLabel" for="numOfi">Numero Oficina</label>
+                    <input type="number" min="1" id="numOfi" class="form-control" required>
+                </div>
+                <div>
+                    <label class="formLabel" for="areaOfi">Area</label>
+                    <input type="number" min="1" max="9" id="areaOfi" class="form-control" required>
+                </div>
+                <div>
+                    <label class="formLabel" for="pisoOfi">Piso</label>
+                    <input type="number" min="1" max="3" id="pisoOfi" class="form-control" required>
+                </div>
+            </div>
+            <div class="botones">
+                <button id="btnCrearOfi" class="btn btn-primary">Crear Oficina</button>
+            </div>
+            <div id="sectionBorrar" style="display: none;">
+                <div>
+                    <label class="formLabel" for="numOfi">Oficina ID</label>
+                    <input type="number" min="1" id="odfiId" class="form-control" required>
                 </div>
                 <div class="botones">
-                    <button id="btnCrearOfi" class="btn btn-primary">Crear Oficina</button>
+                    <button id="btnBorrarOfi" class="btn btn-primary">Borrar Oficina</button>
                 </div>
-                </div>
-                <div id="mensajeEstadoS4" style="display: none;"></div>
-                
+            </div>
+        </div>
+        <div id="mensajeEstadoS4" style="display: none;"></div>
+
     </section>
 
     <div id="editModal" class="modal">
