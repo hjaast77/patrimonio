@@ -101,10 +101,10 @@
 
 
     </section>
-    <section class="section" id="section--4" style="display: none;">
+    <section class="section" id="section--4" style="display: none;" class="">
         <h1>Crear / Eliminar Oficinas</h1>
 
-        <div class="form__group">
+        <div class="form__group ">
             <div class="pisos"><span>
                     <input type="radio" id="radioCrearOfi" name="nivel" value="SS" class="pisos" checked>
                     <label for="ss">Crear</label></span>
@@ -113,14 +113,14 @@
                     <label for="pb">Borrar</label></span>
             </div>
 
-            <div id="sectionCrear">
-                <div>
+            <div id="sectionCrear" style="display: none;" class="">
+                <div class="">
                     <label class="formLabel" for="descOfi">Descripcion</label>
-                    <input type="text" id="descOfi" class="form-control" required>
+                    <input type="text" maxlength="255" id="descOfi" class="form-control" required>
                 </div>
                 <div>
                     <label class="formLabel" for="numOfi">Numero Oficina</label>
-                    <input type="number" min="1" id="numOfi" class="form-control" required>
+                    <input type="text" maxlength="255" id="numOfi" class="form-control" required>
                 </div>
                 <div>
                     <label class="formLabel" for="areaOfi">Area</label>
@@ -132,9 +132,10 @@
                 </div>
             </div>
             <div class="botones">
-                <button id="btnCrearOfi" class="btn btn-primary">Crear Oficina</button>
+                <button id="btnCrearOfi" class="btn btn-primary" style="display: none;">Crear Oficina</button>
             </div>
-            <div id="sectionBorrar" style="display: none;">
+
+            <div id="sectionBorrar" style="display: none;"  class="">
                 <div>
                     <label class="formLabel" for="numOfi">Oficina ID</label>
                     <input type="number" min="1" id="ofiId" class="form-control" required>

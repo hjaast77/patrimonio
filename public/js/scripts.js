@@ -129,15 +129,22 @@ document.addEventListener("DOMContentLoaded", function () {
   selectCrearOfi.addEventListener("click", () => {
     seccionBorrar.style.display= "none"
     seccionCrear.style.display= "block"
-    btnCrearOfi.style.display= "block"
+    btnCrearOfi.style.display= "flex"
     btnBorrarOfi.style.display= "none"
   })
+
   btnCrearOfi.addEventListener("click", async ()=>{
-    
+
     descOfi = inputDescOfi.value;
     numOfi = inputNumOfi.value;
     areaOfi = inputAreaOfi.value;
     pisoOfi = inputPisoOfi.value;
+
+    if(descOfi == "" || numOfi == "" || areaOfi == "" || pisoOfi == ""){
+      mostrarMensajeS4("Debe completar todos los campos","error")
+      return;
+    }
+
 
     try {
       await crearOficina(descOfi,numOfi,areaOfi,pisoOfi);
@@ -169,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       await borrarOficina(idOfi);
-        idOfi.value = null;
+      inputIdOfi.value ="";
     } catch (error) {
       console.error("Error:", error);
       alert("Hubo un error al Crear la Oficina.");
@@ -363,7 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Error al eliminar la oficina");
       }
 
-      mostrarMensajeS4("Oficina eliminada correctamente", "success");
+      mostrarMensajeS4(`Oficina ${idOfiI} eliminada correctamente`, "success");
       
     } catch (error) {
       console.error("Error al eliminar la oficina:", error);
