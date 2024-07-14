@@ -8,6 +8,7 @@ const {
   cambiarEstadoOficina,
   cerrarOficina,
   crearOficina,
+  borrarOficina,
 } = require("../controllers/oficinasController");
 
 router.get("/", listarOficinas);
@@ -16,4 +17,5 @@ router.get("/:piso", listarOficinasPorPiso);
 router.put("/cambiarEstado/:id", cambiarEstadoOficina);
 router.put("/cerrar/:oficina", cerrarOficina);
 router.post("/crear", crearOficina);
+router.delete("/borrar",borrarOficina);
 module.exports = router;

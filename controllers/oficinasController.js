@@ -91,11 +91,25 @@ const crearOficina = async (req, res) => {
   }
 };
 
+const borrarOficina = async (req, res) => {
+  
+  const { ofiIdi } = req.body; 
+  console.log(ofiIdi);
+  console.log(`Intentando eliminar oficina`);
+  try {
+    await db.pool.execute("DELETE FROM oficinas where id = ?", [ofiIdi]);
+    res.status(200).json({ message: "Oficina borrada correctamente." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   listarOficinas,
   listarOficinasAbiertas,
   listarOficinasPorPiso,
   cambiarEstadoOficina,
   cerrarOficina,
-  crearOficina
+  crearOficina,
+  borrarOficina
 };

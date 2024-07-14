@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputPisoOfi = document.getElementById("pisoOfi");
   const btnCrearOfi = document.getElementById("btnCrearOfi");
   const btnBorrarOfi = document.getElementById("btnBorrarOfi");
+  const inputIdOfi = document.getElementById("ofiId");
   //#################################################################################
   //MODAL;
   //#################################################################################
@@ -157,6 +158,24 @@ document.addEventListener("DOMContentLoaded", function () {
     btnCrearOfi.style.display= "none"
     btnBorrarOfi.style.display= "block"
   })
+  btnBorrarOfi.addEventListener("click", async ()=>{
+    
+    idOfi=inputIdOfi.value;
+
+    if(idOfi == ""){
+      mostrarMensajeS4("ID inválido","error")
+      return;
+    }
+
+    try {
+      await borrarOficina(idOfi);
+        idOfi.value = null;
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al Crear la Oficina.");
+    }
+  })
+
 
 
   submitEdit.addEventListener("click", async () => {
@@ -324,7 +343,33 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Funcion Borrar Oficina
+  async function borrarOficina(idOfi){
+    idOfiI = parseInt(idOfi);
 
+    const ofiId = {
+      ofiIdi:idOfiI
+    }
+
+    try {
+      const responseDel = await fetch("/ubicaciones/borrar", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ofiId),
+      });
+      
+      if (!responseDel.ok) {
+        throw new Error("Error al eliminar la oficina");
+      }
+
+      mostrarMensajeS4("Oficina eliminada correctamente", "success");
+      
+    } catch (error) {
+      console.error("Error al eliminar la oficina:", error);
+      mostrarMensajeS4("Error al eliminar la oficina.", "error");
+    }
+  }
 
   //Listamos las ubicaciones en formato card
   async function mostrarUbicaciones() {
