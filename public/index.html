@@ -22,14 +22,12 @@
             <li class="nav__item">
                 <a class="nav__link" href="#section--3">Bienes</a>
             </li>
-            <li class="nav__item">
-                <a class="nav__link" href="#section--4">Oficinas</a>
-            </li>
+
         </ul>
     </nav>
-    <h1>Asignar Bienes a Oficina</h1>
 
     <section class="section" id="section--1">
+        <h2>Asignar Bienes a Oficina</h2>
 
         <div class="form__group">
             <div class="pisos"><span>
@@ -89,9 +87,14 @@
     </section>
 
     <section class="section" id="section--2" style="display: none;">
-        <p>Ubicaciones</p>
+        <h2>Oficinas</h2>
 
+        <div class="agregar--ubicacion">
+            <i class="fa-regular fa-square-plus"></i>
+            Agregar Ubicación
+        </div>
         <div id="ubicacionesContainer">
+
             <!-- Se muestran las ubicaciones en formato card -->
         </div>
     </section>
@@ -101,55 +104,7 @@
 
 
     </section>
-    <section class="section" id="section--4" style="display: none;" >
 
-        <div class="form__group">
-            <div class="pisos"><span>
-                <input type="radio" id="crearOfi" name="nivel" value="SS" class="pisos">
-                <label for="ss">Crear</label></span>
-            <span>
-                <input type="radio" id="borrarOfi" name="nivel" value="PB" class="pisos">
-                <label for="pb">Borrar</label></span>
-        </div>
-            
-                <div class="">
-                    <div>
-                        <label class="formLabel" for="descOfi">Descripcion</label>
-                        <input type="text" id="descOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="numOfi">Numero Oficina</label>
-                        <input type="number" min="1"  id="numOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="areaOfi">Area</label>
-                        <input type="number" min="1" max="9"  id="areaOfi" class="form-control" required>
-                    </div>
-                    <div>
-                        <label class="formLabel" for="pisoOfi">Piso</label>
-                        <input type="number" min="1" max="3" id="pisoOfi" class="form-control" required>
-                    </div>
-                </div>
-                <div class="botones">
-                    <button id="btnCrearOfi" class="btn btn-primary">Crear Oficina</button>
-                </div>
-       
-
-
-        </div>
-        <hr>
-
-        <div id="nombreBienContainer"></div>
-        <!-- Container para mostrar el nombre del bie ncuando se busca el cod_MINCYT -->
-
-        <div id="mensajeEstado" style="display: none;"></div>
-
-        <div id="bienesAsignadosContainer">
-            <!-- Se muestran los bienes asignados a una oficina en formato card -->
-        </div>
-
-
-    </section>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
@@ -163,6 +118,36 @@
         </div>
     </div>
 
+    <div id="AgregarOfModal" class="modal">
+        <form action="">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Agregar Oficina</h2>
+                <label for="OfDesc">Descripcion de la Oficina:</label>
+                <input type="text" id="ofDesc" placeholder="Ingresar Descripcion de la Oficina" required>
+                <label for="OfNum">Número de la Oficina:</label>
+                <input type="number" id="ofNum" placeholder="Ingresar Número de Oficina" required>
+                <label class="formLabel" for="AreaSelect">Selecciona un Area:</label>
+                <select id="AreaSelect" class="form-control" required>
+                    <option value="" disabled selected>Seleccione Area</option>
+
+                </select>
+                <div class="pisos"><span>
+                        <input type="radio" id="ss" name="pisos" value="SS" class="pisos" required>
+                        <label for="ss">SS (Subsuelo)</label></span>
+                    <span>
+                        <input type="radio" id="pb" name="pisos" value="PB" class="pisos" required>
+                        <label for="pb">PB (Planta Baja)</label></span>
+                    <span>
+                        <input type="radio" id="pa" name="pisos" value="PA" class="pisos" required>
+                        <label for="pa">PA (Planta Alta)</label></span>
+                </div>
+
+                <div id="descripcionBienContainer"></div>
+                <button id="aregarOficina">Agregar Oficina</button>
+            </div>
+        </form>
+    </div>
 
 
     <script src="js/scripts.js"></script>
