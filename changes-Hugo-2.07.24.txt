@@ -9,16 +9,21 @@ se modifica /nom para aceptar query string.  Se adecua el fetch en scripts.js ac
 scripts.js
 se modifica funcion mostrarDescripcionBien() para hacer fetch a la ruta fetch(`/bienes/nom/?cod=${cod}`);
 AGREGAR COLUMNA UPDATED_DATE a la base de datos
-ALTER TABLE `bienes` ADD COLUMN `updated_date2` DATE
+ALTER TABLE `bienes` ADD COLUMN `updated_date` DATE
 //TRIGGER PARA ESTABLECER FECHA A LAS ASIGNACIONES
 DROP TRIGGER IF EXISTS update_bienes_date;
+
+-- Crear el nuevo trigger
 DELIMITER //
-CREATE TRIGGER update_bienes_date"
+
+CREATE TRIGGER update_bienes_date
 BEFORE UPDATE ON `bienes`
 FOR EACH ROW
 BEGIN
   IF NEW.oficinas_id IS NOT NULL AND OLD.oficinas_id IS NULL THEN
     SET NEW.updated_date = CURDATE();
   END IF;
-END//
-DELIMITER;
+END;
+//
+
+DELIMITER ;
