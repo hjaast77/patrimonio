@@ -1,8 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
   const oficinaSelect = document.getElementById("oficinaSelect");
+  const areaSelect = document.getElementById("AreaSelect");
   const bienInput = document.getElementById("bienInput");
   const bienInputManual = document.getElementById("bienInputManual");
   const bienInputEdit = document.getElementById("bienInputEdit");
+  const ofDescripcion = document.getElementById("ofDesc");
+  const ofNumero = document.getElementById("ofNum");
+
   const nombreBienContainer = document.getElementById("nombreBienContainer");
   const asignarBienButton = document.getElementById("asignarBtn");
   const cerrarUbicBtn = document.querySelector("#cerrarUbicacion");
@@ -13,14 +17,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const descripcionBienContainer = document.getElementById(
     "descripcionBienContainer"
   );
+  const agregarOf = document.querySelector(".agregar--ubicacion");
   const modal = document.getElementById("editModal");
+  const modalAgregarOf = document.getElementById("AgregarOfModal");
   const span = document.getElementsByClassName("close")[0];
   const submitEdit = document.getElementById("submitEdit");
+  const btnAgregarOficina = document.querySelector("#aregarOficina");
   let currentCod = "";
+
+  // // Elementos de pestaña Oficinas
+  // const selectCrearOfi = document.getElementById("crearOfi");
+  // const selectBorrarOfi = document.getElementById("borrarOfi");
+  // const inputDescOfi = document.getElementById("descOfi");
+  // const inputNumOfi = document.getElementById("numOfi");
+  // const inputAreaOfi = document.getElementById("areaOfi");
+  // const inputPisoOfi = document.getElementById("pisoOfi");
+  // const btnCrearOfi = document.getElementById("btnCrearOfi");
 
   //#################################################################################
   //MODAL;
   //#################################################################################
+
   function openModal(cod) {
     bienInputEdit.value = "";
     currentCod = cod;
@@ -34,10 +51,13 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
+    document.querySelectorAll(".modal").forEach((modal) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    });
   };
+
   //#################################################################################
   //LISTENERS;
   //#################################################################################
@@ -127,6 +147,62 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       console.error("Error:", error);
       alert("Hubo un error al editar el bien.");
+    }
+  });
+
+  agregarOf.addEventListener("click", () => {
+    modalAgregarOf.style.display = "block";
+    mostrarAreas();
+  });
+
+  document.querySelectorAll(".modal").forEach((modal) => {
+    const span = modal.querySelector(".close");
+    if (span) {
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+    }
+  });
+
+  btnAgregarOficina.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const ofDesc = ofDescripcion.value;
+    const ofNum = ofNumero.value;
+    const area = areaSelect.value;
+    let pisoValue = "";
+    const piso = document.querySelector('input[name="pisos"]:checked');
+
+    if (piso) {
+      switch (piso.value) {
+        case "SS":
+          pisoValue = 1;
+          break;
+        case "PB":
+          pisoValue = 2;
+          break;
+        case "PA":
+          pisoValue = 3;
+          break;
+        default:
+          pisoValue = "";
+      }
+    } else {
+      console.log("No se ha seleccionado ningún piso");
+    }
+
+    if (!ofDesc || !ofNum || !area || !pisoValue) {
+      alert("Debe completar todos los campos");
+      return;
+    }
+
+    console.log(ofDesc, ofNum, area, pisoValue);
+
+    try {
+      await crearOficina(ofDesc, ofNum, area, pisoValue);
+      modalAgregarOf.style.display = "none";
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Hubo un error al agregar la oficina.");
     }
   });
 
@@ -232,6 +308,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Funcion Crear Oficina
+  async function crearOficina(descOfi, numOfi, areaOfi, pisoOfi) {
+    // const areaOfiI = parseInt(areaOfi);
+    // const pisoOfiI = parseInt(pisoOfi);
+
+    const nuevaOfi = {
+      descOfi: descOfi,
+      numOfi: numOfi,
+      areaOfi: areaOfi,
+      pisoOfi: pisoOfi,
+    };
+
+    try {
+      const response = await fetch("/ubicaciones/crear", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevaOfi),
+      });
+      const data = await response.json();
+      alert("Oficina creada correctamente.", "ok");
+    } catch (error) {
+      console.error("Error al crear la oficina:", error);
+      mostrarMensaje("Error al crear la oficina.", "error");
+    }
+  }
+
   //Listamos las ubicaciones en formato card
   async function mostrarUbicaciones() {
     try {
@@ -243,25 +347,37 @@ document.addEventListener("DOMContentLoaded", function () {
       data.forEach((ubicacion) => {
         const div = document.createElement("div");
         div.className = "ubicacion-card";
-        div.innerHTML = `
-          <p><strong>Nombre:</strong> ${ubicacion.nombre} - ${
+        div.innerHTML = `                <div class="ubicacion-info">
+                    <p><strong>Nombre:</strong> ${ubicacion.nombre} - ${
           ubicacion.descripcion
         }</p>
-          <p><strong>Estado:</strong> ${
-            ubicacion.cerrada ? "Cerrada" : "Abierta"
-          }</p>
-        `;
+                    
+                    <p><strong>Estado:</strong> ${
+                      ubicacion.cerrada ? "Cerrada" : "Abierta"
+                    }</p>
+                </div>
+                <div class="ubicacion-actions">
+                    <button class="${
+                      ubicacion.cerrada ? "btn btn-success" : "btn btn-danger"
+                    }">
+                        ${ubicacion.cerrada ? "Abrir" : "Cerrar"}
+                    </button>
+                    <i class="fa-regular fa-trash-can ubicacion-delete"></i>
+                </div>
+            `;
 
-        const toggleButton = document.createElement("button");
-        toggleButton.textContent = ubicacion.cerrada ? "Abrir" : "Cerrar";
-        toggleButton.className = ubicacion.cerrada
-          ? "btn btn-success"
-          : "btn btn-danger";
-        toggleButton.addEventListener("click", function () {
+        // Event listener para el botón de abrir/cerrar
+        div.querySelector("button").addEventListener("click", function () {
           toggleEstadoUbicacion(ubicacion.id, !ubicacion.cerrada);
         });
 
-        div.appendChild(toggleButton);
+        // Event listener para el icono de eliminación
+        div
+          .querySelector(".ubicacion-delete")
+          .addEventListener("click", function () {
+            eliminarUbicacion(ubicacion.id);
+          });
+
         ubicacionesContainer.appendChild(div);
       });
     } catch (error) {
@@ -490,6 +606,41 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       console.error("Error al actualizar la ubicación:", error);
       mostrarMensaje("Error al actualizar la ubicación.", "error");
+    }
+  }
+
+  async function mostrarAreas() {
+    // clearSelectAreas();
+
+    try {
+      const response = await fetch("/ubicaciones/areas/todas");
+      const data = await response.json();
+      data.forEach((area) => {
+        const option = document.createElement("option");
+        option.value = area.id;
+        option.textContent = `${area.descripcion}`;
+        areaSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error al obtener las Areas:", error);
+    }
+  }
+
+  async function eliminarUbicacion(id) {
+    try {
+      const response = await fetch(`/ubicaciones/eliminarOf/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(
+          "No se pudo eliminar la ubicación. Asegúrese de que no tenga bienes asignados."
+        );
+      }
+      mostrarUbicaciones();
+      alert("Ubicación eliminada exitosamente");
+    } catch (error) {
+      console.error("Error al eliminar la ubicación:", error);
+      alert("Hubo un error al eliminar la ubicación. " + error.message);
     }
   }
 
