@@ -126,6 +126,17 @@ const eliminarOficina = async (req, res) => {
   }
 };
 
+const listarTodasOficinas = async (req, res) => {
+  try {
+    const [rows] = await db.pool.execute(
+      "SELECT * FROM oficinas ORDER BY pisos_id ASC;"
+    );
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   listarOficinas,
   listarOficinasAbiertas,
@@ -135,4 +146,5 @@ module.exports = {
   crearOficina,
   listarAreas,
   eliminarOficina,
+  listarTodasOficinas,
 };

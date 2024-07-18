@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const oficinaSelect = document.getElementById("oficinaSelect");
+  const oficinaSelectResumen = document.getElementById("oficinaSelectResumen");
   const areaSelect = document.getElementById("AreaSelect");
   const bienInput = document.getElementById("bienInput");
   const bienInputManual = document.getElementById("bienInputManual");
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const span = document.getElementsByClassName("close")[0];
   const submitEdit = document.getElementById("submitEdit");
   const btnAgregarOficina = document.querySelector("#aregarOficina");
+  // const cantidad = parseInt(document.getElementById("cantidad").value, 10);
   let currentCod = "";
 
   // // Elementos de pestaña Oficinas
@@ -71,6 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const idOficinaSeleccionada = oficinaSelect.value;
     limpiarCodigo();
     mostrarBienesOficina(idOficinaSeleccionada);
+  });
+
+  oficinaSelectResumen.addEventListener("change", function () {
+    const idOficinaSeleccionada = oficinaSelectResumen.value;
+    // limpiarCodigo();
+    mostrarResumen(idOficinaSeleccionada);
   });
 
   // Valido que el bien tenga 5 digitos (Cod_MINCYT es un numero que va desde 28011 hasta 36032 y muestro la descripcion del bien )
@@ -225,8 +233,16 @@ document.addEventListener("DOMContentLoaded", function () {
           document.querySelector(b.getAttribute("href")).style.display = "none";
         }
       });
+      if (id === "#section--1") {
+        mostrarOficinas(); // Llamar a mostrarUbicaciones al mostrar la sección 2
+      }
+
       if (id === "#section--2") {
         mostrarUbicaciones(); // Llamar a mostrarUbicaciones al mostrar la sección 2
+      }
+      if (id === "#section--3") {
+        mostrarOficinasTodas(); // Llamar a mostrarUbicaciones al mostrar la sección 2
+        resumenContainer.innerHTML = "";
       }
     }
   });
@@ -253,6 +269,8 @@ document.addEventListener("DOMContentLoaded", function () {
   //Borra contenid ode Select principal
   function clearSelect() {
     oficinaSelect.innerHTML =
+      '<option value="" disabled selected>Seleccione oficina</option>';
+    oficinaSelectResumen.innerHTML =
       '<option value="" disabled selected>Seleccione oficina</option>';
   }
   //borra el input de busqueda MINCYT y la desripcion
@@ -505,6 +523,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function agregarBienManual(idOficina, codigoBien) {
+    const cantidadInputElement = document.getElementById("cantidadInput");
+    const cantidadInput = cantidadInputElement.value;
+    const cantidad = parseInt(cantidadInput, 10);
     if (!idOficina) {
       mostrarMensaje("Debe seleccionar una oficina primero", "error");
       return;
@@ -524,23 +545,47 @@ document.addEventListener("DOMContentLoaded", function () {
         oficina: idOficina,
       };
 
-      console.log(nuevoBien);
+      if (isNaN(cantidad) || cantidad <= 0) {
+        // Insertar un solo bien
+        const insertResponse = await fetch("/bienes/cargaManual", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(nuevoBien),
+        });
 
-      const insertResponse = await fetch("/bienes/cargaManual", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(nuevoBien),
-      });
+        if (!insertResponse.ok) {
+          throw new Error(
+            "Error al insertar el nuevo bien en la base de datos"
+          );
+        }
 
-      if (!insertResponse.ok) {
-        throw new Error("Error al insertar el nuevo bien en la base de datos");
+        mostrarMensaje("Bien agregado correctamente.", "success");
+      } else {
+        // Insertar múltiples bienes
+        const nuevoBienes = Array.from({ length: cantidad }, () => ({
+          ...nuevoBien,
+        }));
+        const insertResponse = await fetch("/bienes/cargaManualMultiples", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(nuevoBienes),
+        });
+
+        if (!insertResponse.ok) {
+          throw new Error("Error al insertar los bienes en la base de datos");
+        }
+
+        mostrarMensaje("Bienes agregados correctamente.", "success");
       }
 
-      mostrarMensaje("Bien agregado correctamente.", "success");
-      limpiarCodigo(); //limpiamos input y descripcion
-      mostrarBienesOficina(idOficina); //Relaod de los bienes de la oficina
+      limpiarCodigo(); // Limpiar inputs y descripción
+      mostrarBienesOficina(idOficina); // Recargar los bienes de la oficina
+      cantidadInputElement.value = "";
+      bienInputManual.value = "";
       bienInput.focus();
     } catch (error) {
       console.error("Error:", error);
@@ -641,6 +686,52 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       console.error("Error al eliminar la ubicación:", error);
       alert("Hubo un error al eliminar la ubicación. " + error.message);
+    }
+  }
+
+  async function mostrarOficinasTodas() {
+    clearSelect();
+
+    try {
+      const response = await fetch("/ubicaciones/oficinas/todas");
+      const data = await response.json();
+      data.forEach((oficina) => {
+        const option = document.createElement("option");
+        option.value = oficina.id;
+        option.textContent = `${oficina.nombre} - ${oficina.descripcion}`;
+        oficinaSelectResumen.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error al obtener las oficinas:", error);
+      mostrarMensaje("Error al obtener las oficinas.", "error");
+    }
+  }
+
+  async function mostrarResumen(idOficina) {
+    try {
+      const response = await fetch(`/bienes/resumen/${idOficina}`);
+      const data = await response.json();
+      const resumenContainer = document.getElementById("resumenContainer");
+      resumenContainer.innerHTML = ""; // Clear existing content
+      const totalElement = document.createElement("div");
+      totalElement.classList.add("resumen-total");
+      totalElement.innerHTML = `<p><strong>Total Bienes:</strong> ${data.totalBienes}</p>`;
+      resumenContainer.appendChild(totalElement);
+
+      data.resumen.forEach((bien) => {
+        const bienElement = document.createElement("div");
+        bienElement.classList.add("resumen-bien");
+
+        bienElement.innerHTML = `
+                <p><strong>${bien.descripcion}</strong></p>
+                <p>Total: ${bien.total}</p>
+                <p>Con Etiqueta: ${bien.conEtiqueta}</p>
+                <p>Sin Etiqueta: ${bien.sinEtiqueta}</p>
+            `;
+        resumenContainer.appendChild(bienElement);
+      });
+    } catch (error) {
+      console.error("Error fetching resumen:", error);
     }
   }
 

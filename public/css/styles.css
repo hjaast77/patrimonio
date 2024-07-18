@@ -330,7 +330,12 @@ h2 {
 .modal-content button:hover {
   background-color: #45a049;
 }
-
+.resumen-bien {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
 /* Media queries */
 
 @media (max-width: 767px) {

@@ -5,5 +5,10 @@ module.exports = {
     password: "queliolia",
     database: "patrimoniouba_db",
     port: 3306,
+    // host: "localhost",
+    // user: "root",
+    // password: "admin",
+    // database: "bienes",
+    // port: 3306,
   },
 };

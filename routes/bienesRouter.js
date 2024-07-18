@@ -9,6 +9,8 @@ const {
   eliminarBien,
   agregarManual,
   editarBien,
+  agregarManualMultiples,
+  listarResumen,
 } = require("../controllers/bienesController");
 
 router.get("/bienesOf/:id", bienesPorOficina);
@@ -18,5 +20,6 @@ router.put("/agregar", agregarBien);
 router.put("/eliminar", eliminarBien);
 router.put("/editar", editarBien);
 router.post("/cargaManual", agregarManual);
-
+router.post("/cargaManualMultiples", agregarManualMultiples);
+router.get("/resumen/:idOficinas", listarResumen);
 module.exports = router;

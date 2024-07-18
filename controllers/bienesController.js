@@ -141,6 +141,63 @@ const editarBien = async (req, res) => {
   }
 };
 
+const agregarManualMultiples = async (req, res) => {
+  const bienes = req.body;
+
+  if (!bienes || !Array.isArray(bienes) || bienes.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Datos incompletos para agregar los bienes" });
+  }
+
+  try {
+    const [rows] = await db.pool.execute(
+      "SELECT MAX(cod_MINCYT) as maxCod FROM bienes"
+    );
+    let maxCod = rows[0].maxCod || 0;
+
+    const values = bienes.map((bien) => {
+      maxCod += 1;
+      return [bien.descripcion, bien.precio, bien.cuenta, bien.oficina, maxCod];
+    });
+
+    const placeholders = values.map(() => "(?, ?, ?, ?, ?)").join(", ");
+    const flatValues = values.flat();
+
+    await db.pool.execute(
+      `INSERT INTO bienes (descripcion, precio, cuentas_idcuentas, oficinas_id, cod_MINCYT) VALUES ${placeholders}`,
+      flatValues
+    );
+
+    res.status(201).json({ message: "Bienes agregados correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const listarResumen = async (req, res) => {
+  const { idOficinas } = req.params;
+  console.log(idOficinas);
+  try {
+    const [rows] = await db.pool.execute(
+      `
+            SELECT descripcion, COUNT(*) as total,
+                SUM(CASE WHEN cod_MINCYT > 36032 THEN 1 ELSE 0 END) as sinEtiqueta,
+                SUM(CASE WHEN cod_MINCYT <= 36032 THEN 1 ELSE 0 END) as conEtiqueta
+            FROM bienes
+            WHERE oficinas_id = ?
+            GROUP BY descripcion
+        `,
+      [idOficinas]
+    );
+    const totalBienes = rows.reduce((acc, item) => acc + item.total, 0);
+    res.json({ resumen: rows, totalBienes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching data");
+  }
+};
+
 module.exports = {
   bienesPorOficina,
   obtenerBien,
@@ -149,4 +206,6 @@ module.exports = {
   eliminarBien,
   agregarManual,
   editarBien,
+  agregarManualMultiples,
+  listarResumen,
 };

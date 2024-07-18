@@ -61,10 +61,15 @@
                         placeholder="Ingresar código de un bien similar">
                 </div>
                 <div>
+                    <label class="formLabel" for="cantidadInput">Cantidad de registros</label>
+                    <input type="number" id="cantidadInput" class="form-control"
+                        placeholder="Cantidad de bienes a agregar">
+                </div>
+                <!-- <div>
                     <label class="formLabel" for="bienInputManualSpafe">Manual: Codigos SPAFE</label>
                     <input type="text" id="bienInputManualSpafe" class="form-control"
                         placeholder="Ingresar código SPAFE">
-                </div>
+                </div> -->
             </div>
             <div class="botones">
                 <button id="asignarBtn" class="btn btn-primary">Asignar Bien</button>
@@ -100,7 +105,34 @@
     </section>
 
     <section class="section" id="section--3" style="display: none;">
-        <p>Listado de Bienes</p>
+        <h2>Resumen de Bienes Asignados</h2>
+
+
+        <div class="form__group">
+            <div class="pisos"><span>
+                    <input type="radio" id="ssR" name="nivel" value="SS" class="pisos">
+                    <label for="ssR">SS (Subsuelo)</label></span>
+                <span>
+                    <input type="radio" id="pbR" name="nivel" value="PB" class="pisos">
+                    <label for="pbR">PB (Planta Baja)</label></span>
+                <span>
+                    <input type="radio" id="paR" name="nivel" value="PA" class="pisos">
+                    <label for="paR">PA (Planta Alta)</label></span>
+            </div>
+            <div class="buscador__todos">
+                <div class="buscador">
+                    <label class="formLabel" for="oficinaSelectResumen">Selecciona una Oficina:</label>
+                    <select id="oficinaSelectResumen" class="form-control">
+                        <option value="" disabled selected>Seleccione oficina</option>
+
+                    </select>
+                </div>
+            </div>
+
+
+            <div id="resumenContainer">
+                <!-- Resumen will be appended here -->
+            </div>
 
 
     </section>
