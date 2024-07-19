@@ -181,12 +181,25 @@ const listarResumen = async (req, res) => {
   try {
     const [rows] = await db.pool.execute(
       `
-            SELECT descripcion, COUNT(*) as total,
-                SUM(CASE WHEN cod_MINCYT > 36032 THEN 1 ELSE 0 END) as sinEtiqueta,
-                SUM(CASE WHEN cod_MINCYT <= 36032 THEN 1 ELSE 0 END) as conEtiqueta
-            FROM bienes
-            WHERE oficinas_id = ?
-            GROUP BY descripcion
+            SELECT
+    descripcion,
+    COUNT(*) AS total,
+    SUM(CASE WHEN cod_MINCYT > 36032 THEN 1 ELSE 0 END) AS sinEtiqueta,
+    SUM(CASE WHEN cod_MINCYT <= 36032 THEN 1 ELSE 0 END) AS conEtiqueta
+FROM (
+    SELECT
+        CASE
+            WHEN descripcion LIKE 'CPU Dell - Modelo: OPTIPLEX3070%' THEN 'CPU Dell - Modelo: OPTIPLEX3070'
+            WHEN descripcion LIKE 'Monitor Dell - Modelo: P2419H%' THEN 'Monitor Dell - Modelo: P2419H'
+            WHEN descripcion LIKE 'Equipo integral de videoconferencia Logitech - Modelo: V-V0036%' THEN 'Equipo integral de videoconferencia Logitech - Modelo: V-V0036'
+            -- Agrega más patrones según sea necesario
+            ELSE descripcion
+        END AS descripcion,
+        cod_MINCYT
+    FROM bienes
+    WHERE oficinas_id = ?
+) AS subquery
+GROUP BY descripcion;
         `,
       [idOficinas]
     );
@@ -209,3 +222,31 @@ module.exports = {
   agregarManualMultiples,
   listarResumen,
 };
+
+//consulta listar resumen
+// SELECT
+//     descripcion_comun,
+//     COUNT(*) AS total_bienes,
+//     SUM(CASE WHEN cod_MINCYT > 36032 THEN 1 ELSE 0 END) AS sinEtiqueta,
+//     SUM(CASE WHEN cod_MINCYT <= 36032 THEN 1 ELSE 0 END) AS conEtiqueta
+// FROM (
+//     SELECT
+//         CASE
+//             WHEN descripcion LIKE 'CPU Dell - Modelo: OPTIPLEX3070%' THEN 'CPU Dell - Modelo: OPTIPLEX3070'
+//             WHEN descripcion LIKE 'Monitor Dell - Modelo: P2419H%' THEN 'Monitor Dell - Modelo: P2419H'
+//             WHEN descripcion LIKE 'Equipo integral de videoconferencia Logitech - Modelo: V-V0036%' THEN 'Equipo integral de videoconferencia Logitech - Modelo: V-V0036'
+//             -- Agrega más patrones según sea necesario
+//             ELSE descripcion
+//         END AS descripcion_comun,
+//         cod_MINCYT
+//     FROM bienes
+//     WHERE oficinas_id = 34
+// ) AS subquery
+// GROUP BY descripcion_comun;
+
+// SELECT descripcion, COUNT(*) as total,
+// SUM(CASE WHEN cod_MINCYT > 36032 THEN 1 ELSE 0 END) as sinEtiqueta,
+// SUM(CASE WHEN cod_MINCYT <= 36032 THEN 1 ELSE 0 END) as conEtiqueta
+// FROM bienes
+// WHERE oficinas_id = ?
+// GROUP BY descripcion
