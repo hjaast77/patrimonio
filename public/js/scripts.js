@@ -287,6 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
       mensajeEstado.style.display = "none";
     }, 3000);
   }
+
   //##################################################################################
 
   //Cargar la lista de oficinas en el select
