@@ -10,7 +10,13 @@ function startScan() {
       (decodedText, decodedResult) => {
         // Extract the last 5 digits from the decoded text
         const lastFiveDigits = decodedText.slice(-5);
-        document.getElementById("bienInput").value = lastFiveDigits;
+        const bienInput = document.getElementById("bienInput");
+        bienInput.value = lastFiveDigits;
+
+        // Manually trigger the input event
+        const inputEvent = new Event("input", { bubbles: true });
+        bienInput.dispatchEvent(inputEvent);
+
         html5QrCode.stop();
       },
       (errorMessage) => {
