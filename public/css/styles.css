@@ -120,6 +120,21 @@ nav {
   font-size: 1.2em;
 }
 
+.scan{
+/* Estilos adicionales */
+padding: 4px 10px;      /* Espaciado interno */
+background-color: #4CAF50; /* Color de fondo (verde) */
+color: white;            /* Color del texto e ícono */
+border: none;            /* Sin borde */
+border-radius: 5px;      /* Bordes redondeados */
+font-size: 16px;         /* Tamaño de fuente */
+cursor: pointer;         /* Cambia el cursor a una mano */
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+transition: background-color 0.3s ease, transform 0.3s ease; /* Animación suave */
+  display: block;
+  margin: 10px auto;
+}
+
 /* .ubicacion-card p {
   margin: 5px 0;
 }
@@ -184,7 +199,14 @@ h2 {
 #asignarBtn,
 #cerrarUbicacion {
   font-size: 0.8em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
 }
+
+#cerrarUbicacion {
+background-color: #dc3545;
+}
+
 
 .form-control {
   width: 100%;

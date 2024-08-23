@@ -3,7 +3,7 @@ const db = require("../models/db");
 const listarOficinas = async (req, res) => {
   try {
     const [rows] = await db.pool.execute(
-      "SELECT * FROM oficinas ORDER BY cerrada DESC;"
+      "SELECT * FROM oficinas ORDER BY cerrada DESC, nombre ASC;"
     );
     res.json(rows);
   } catch (error) {
@@ -129,7 +129,7 @@ const eliminarOficina = async (req, res) => {
 const listarTodasOficinas = async (req, res) => {
   try {
     const [rows] = await db.pool.execute(
-      "SELECT * FROM oficinas ORDER BY pisos_id ASC;"
+      "SELECT * FROM oficinas ORDER BY nombre ASC;"
     );
     res.json(rows);
   } catch (error) {
