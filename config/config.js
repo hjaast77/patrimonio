@@ -8,7 +8,7 @@ module.exports = {
     host: "mysql-hjast.alwaysdata.net",
     user: "hjast",
     password: "cac2024",
-    database: "hjast_db ",
+    database: "hjast_db",
 
     // host: "localhost",
     // user: "root",
