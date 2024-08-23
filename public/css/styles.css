@@ -336,6 +336,25 @@ h2 {
   margin-bottom: 10px;
   border-radius: 5px;
 }
+
+#scanner {
+  width: 100%; /* Make the scanner container full width */
+  height: 400px; /* Set a fixed height or make it responsive */
+  display: block; /* Ensure it's displayed as a block-level element */
+  margin: 0 auto; /* Center the scanner horizontally if needed */
+}
+
+.qrcode-box {
+  display: flex; /* Use flexbox to align items */
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure it takes up the full height */
+}
+
+html5-qrcode-minified {
+  width: 100%; /* Ensure the QR code scanner uses the full width of its container */
+  height: 100%; /* And the full height */
+}
 /* Media queries */
 
 @media (max-width: 767px) {
