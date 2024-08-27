@@ -10,7 +10,11 @@ function startScan() {
       },
       (decodedText, decodedResult) => {
         document.getElementById("bienInput").value = decodedText.slice(-5); // Only take the last 5 digits
-        html5QrCode.stop(); // Stop scanning after a successful scan
+        // Manually trigger the input event
+        const inputEvent = new Event("input", { bubbles: true });
+        bienInput.dispatchEvent(inputEvent);
+
+        html5QrCode.stop();
       },
       (errorMessage) => {
         console.error("Scanning failed:", errorMessage); // Log errors
