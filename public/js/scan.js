@@ -4,27 +4,19 @@ function startScan() {
     .start(
       { facingMode: "environment" },
       {
-        fps: 10, // Optional, frame per second for barcode scanning
-        qrbox: 250, // Optional, if you want bounded box UI
+        fps: 15, // Higher FPS for smoother scanning
+        qrbox: { width: 300, height: 300 }, // Larger box for better focus
+        formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128],
       },
       (decodedText, decodedResult) => {
-        // Extract the last 5 digits from the decoded text
-        const lastFiveDigits = decodedText.slice(-5);
-        const bienInput = document.getElementById("bienInput");
-        bienInput.value = lastFiveDigits;
-
-        // Manually trigger the input event
-        const inputEvent = new Event("input", { bubbles: true });
-        bienInput.dispatchEvent(inputEvent);
-
-        html5QrCode.stop();
+        document.getElementById("bienInput").value = decodedText.slice(-5); // Only take the last 5 digits
+        html5QrCode.stop(); // Stop scanning after a successful scan
       },
       (errorMessage) => {
-        // Handle scanning failure
-        console.error(errorMessage);
+        console.error("Scanning failed:", errorMessage); // Log errors
       }
     )
     .catch((err) => {
-      console.error("Unable to start scanning:", err);
+      console.error("Unable to start scanning:", err); // Handle start errors
     });
 }
